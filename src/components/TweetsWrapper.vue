@@ -43,7 +43,7 @@ export default {
 .p-10{
   padding: 5px;
   margin: 5px;
-  background-color: red
+  /*background-color: red*/
 }
 
 </style>
