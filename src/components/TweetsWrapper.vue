@@ -5,11 +5,13 @@
       <!-- <div class="columns mag-top"> -->
       <draggable v-model="tweetsData" class="columns mag-top" @end="onEnd">
         <tweet-container
-          class="column p-10 is-primary tweets"
+          class="column p-10 tweets"
+          :class="settings.skinColor"
           v-for="(child,index) in tweetsData"
           :key="index"
-          :tweet="tweets[index]"
+          :tweet="tweetsData[index]"
           :numInCol="settings.numTweets || 30"
+          :settings="settings"
         />
       </draggable>
       <!-- </div> -->
@@ -29,7 +31,8 @@ export default {
   },
   data() {
     return {
-      children: 3
+      children: 3,
+      theTweetsData: []
     };
   },
   computed: {
@@ -42,14 +45,15 @@ export default {
       }
     }
   },
+
   methods: {
     onEnd: function(arg) {
       // console.log(arg.oldIndex, arg.newIndex);
       let oldIndex = arg.oldIndex;
       let newIndex = arg.newIndex;
-      let oldValue = tweetsData[oldIndex];
+      let oldValue = this.tweets[oldIndex];
       this.tweets[oldIndex] = this.tweets[newIndex];
-      this.tweets.newIndex = oldValue;
+      this.tweets[newIndex] = oldValue;
     }
   }
 };

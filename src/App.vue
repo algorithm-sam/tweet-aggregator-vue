@@ -14,7 +14,7 @@
 import Navbar from "./components/Navbar";
 import TweetsWrapper from "./components/TweetsWrapper";
 import EditLayout from "./components/EditLayout";
-// import { EventBus } from "./eventBus.js";
+import { EventBus } from "./eventBus.js";
 import axios from "axios";
 export default {
   name: "App",
@@ -29,10 +29,16 @@ export default {
       overlayed: false,
       loading: true,
       tweets: [],
-      numRows: 0
+      numRows: 0,
+      activeSkin: null
     };
   },
-  async created() {
+  mounted() {
+    EventBus.$on("skinChanged", skin => {
+      this.changeSkin(skin);
+    });
+  },
+  created() {
     this.loading = true;
     axios
       .all([
@@ -63,10 +69,6 @@ export default {
     // if (!response.ok) {
     // }
   },
-  beforeMount() {
-    this.getNumRows();
-  },
-
   methods: {
     getTweets(screen_name) {
       return axios.get(
@@ -80,22 +82,17 @@ export default {
     editLayoutViewMd() {
       this.overlayed = !this.overlayed;
     },
-    getNumRows() {
-      this.numRows = localStorage.getItem("x-numCols")
-        ? JSON.parse(localStorage.getItem("x-numCols"))
-        : Math.ceil(30 / 3);
-    },
-    computeTweets() {
-      let startPos = index * this.numRows;
-      return this.tweets.slice(startPos, startPos + this.numRows);
-    },
-
+    changeSkin(skin) {
+      this.activeSkin = skin;
+    }
+  },
+  computed: {
     getLayoutSettings() {
       let setUp = localStorage.getItem("x-setup")
         ? JSON.parse(localStorage.getItem("x-setup"))
         : {};
       return {
-        skinColor: setUp.color ? setUp.color : null,
+        skinColor: setUp.color ? setUp.color : this.activeSkin,
         numTweets: setUp.numTweets ? setUp.numTweets : null,
         timeRange: setUp.timeRange ? setUp.timeRange : null,
         columnOrder: setUp.columnOrder ? setUp.columnOrder : null

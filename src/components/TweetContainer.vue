@@ -1,6 +1,6 @@
 <template>
   <div class="scrollable">
-    <Tweet v-for="(child,index) in tweet" :key="index" :tweet="child"></Tweet>
+    <Tweet v-for="(child,index) in tweet" :key="index" :tweet="child" :skin="settings.skinColor"></Tweet>
   </div>
 </template>
 
@@ -9,7 +9,7 @@ import Tweet from "./Tweet";
 
 export default {
   name: "container",
-  props: ["tweet", "numInCol"],
+  props: ["tweet", "numInCol", "settings"],
   components: {
     Tweet
   },

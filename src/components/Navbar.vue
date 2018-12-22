@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+  <nav class="navbar" role="navigation" aria-label="main navigation" :class="color">
     <!-- <div class="container"> -->
     <div class="navbar-brand">
       <a class="navbar-item" href="#">
@@ -35,6 +35,11 @@ export default {
   props: ["color"],
   data() {
     return {};
+  },
+  mounted() {
+    EventBus.$on("skinChanged", payload => {
+      this.changeSkin();
+    });
   },
   methods: {
     toggleEditLayoutLarge() {

@@ -21,48 +21,36 @@
     </section>
 
     <p class="menu-label">Page Skin</p>
-    <section>
-      <!-- <div class="field">
-        <b-checkbox :value="true">Default</b-checkbox>
-      </div>
-      <div class="field">
-        <b-checkbox :value="true" type="is-info">Info</b-checkbox>
-      </div>
-      <div class="field">
-        <b-checkbox :value="true" type="is-success">Success</b-checkbox>
-      </div>
-      <div class="field">
-        <b-checkbox :value="true" type="is-danger">Danger</b-checkbox>
-      </div>
-      <div class="field">
-        <b-checkbox :value="true" type="is-warning">Warning</b-checkbox>
-      </div>-->
-      <custom-checkbox
-        v-for="(layoutOption,index) in pageSkins"
-        :checked="layoutOption.active"
-        :key="index"
-        :value="index"
-        :color="layoutOption.name"
-      ></custom-checkbox>
-    </section>
+
+    <custom-checkbox
+      v-for="(layoutOption,index) in pageSkins"
+      :checked="pageSkins[index].active"
+      :key="index"
+      :value="index"
+      :color="layoutOption.name"
+    ></custom-checkbox>
 
     <p class="menu-label">Show Tweets From</p>
     <div class="field">
       <input
         id="sliderWithValue"
-        class="slider has-output"
-        min="10"
-        max="300"
-        :value="tweets"
-        step="5"
+        class="slider is-fullwidth"
+        min="1"
+        max="5"
+        v-model="weekAgo"
+        step="1"
         type="range"
+        @change="dateChanged"
       >
-      <output for="sliderWithValue">2days ago</output>
+      <div>
+        <span style="font-weight:600; font-size:.8em">Tweets from:</span>
+        <b-tag rounded class="is-dark">less than {{weekAgo}} week</b-tag>
+      </div>
     </div>
 
     <div class="field">
       <div class="control">
-        <a class="button is-primary is-rounded">
+        <a class="button is-rounded" :class="activeSkin">
           <span class="icon">
             <i class="fa fa-check"></i>
           </span>
@@ -75,6 +63,7 @@
 
 <script>
 import CustomCheckbox from "./CustomCheckbox";
+import { EventBus } from "../eventBus.js";
 import "bulma-slider/dist/css/bulma-slider.min.css";
 export default {
   name: "EditLayout",
@@ -85,35 +74,59 @@ export default {
   data() {
     return {
       numTweet: 3,
+      weekAgo: 1,
       activeSkin: "",
       pageSkins: [
         {
-          color: "#fff",
-          name: "Default",
+          name: "Light",
+          class: "transparent",
           active: false
         },
         {
-          color: "#fff",
-          name: "Green",
+          name: "Default",
+          class: "primary",
           active: true
         },
         {
-          color: "#fff",
+          name: "Green",
+          class: "sucess",
+          active: false
+        },
+        {
           name: "Orange",
+          class: "warning",
           active: false
         },
         {
-          color: "#fff",
           name: "Red",
+          class: "danger",
           active: false
         },
         {
-          color: "#fff",
           name: "Blue",
+          class: "info",
           active: false
         }
       ]
     };
+  },
+
+  methods: {
+    dateChanged() {
+      EventBus.emit("dateChanged", this.weekAgo);
+    },
+
+    numTweetsChanged() {
+      EventBus.emit("numTweetsChanged", this.numTweet);
+    },
+    changeSkin(skin) {
+      this.activeSkin = skin;
+    }
+  },
+  mounted() {
+    EventBus.$on("skinChanged", className => {
+      this.changeSkin(className);
+    });
   }
 };
 </script>
@@ -122,15 +135,14 @@ export default {
 .layoutOption {
   position: fixed;
   top: 0;
-  padding-top: 60px;
+  padding: 60px 15px 0 15px;
   right: 0;
   width: auto;
   height: 100vh;
   background: rgb(255, 255, 255);
   transform: translateX(100%);
   border-left: 1px solid #7957d5;
-  padding-left: 10px;
-  /* transition: all 0.5s ease-in; */
+  transition: all 0.5s ease-in;
 }
 .overlay {
   background: red;

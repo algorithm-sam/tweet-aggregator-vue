@@ -6,14 +6,16 @@
       :id="'exampleCheckBoxBackgroundColor'+color"
       :name="'exampleCheckBoxBackgroundColor'+color"
       type="checkbox"
-      :checked="checked? 'checked' : false"
+      :checked="checked? 'ckecked' : ''"
       v-model="pageSkin"
+      @change="colorChange"
     >
-    <label for="exampleCheckboxBackgroundColorDefault">{{this.color}}</label>
+    <label :for="'exampleCheckBoxBackgroundColor'+color">{{this.color}}</label>
   </div>
 </template>
 
 <script>
+import { EventBus } from "../eventBus.js";
 export default {
   name: "customCheckBox",
   props: ["color", "checked"],
@@ -25,6 +27,8 @@ export default {
   computed: {
     getColor: function() {
       switch (this.color.toLowerCase()) {
+        case "default":
+          return "is-primary";
         case "green":
           return "is-success";
         case "orange":
@@ -35,6 +39,13 @@ export default {
           return "is-info";
         default:
           return "";
+      }
+    }
+  },
+  methods: {
+    colorChange() {
+      if (this.pageSkin) {
+        EventBus.$emit("skinChanged", this.getColor);
       }
     }
   }
