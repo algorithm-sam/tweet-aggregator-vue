@@ -34,25 +34,34 @@ export default {
       computedTweets: []
     };
   },
-  async created() {
+  mounted() {
     this.loading = true;
-    let response = await this.$http.get(
-      "http://localhost:7890/1.1/statuses/user_timeline.json?count=30&screen_name=makeschool"
-    );
-    console.log(response.body);
-    this.tweets = response.body;
-    this.loading = false;
-    if (!response) {
-      this.loading = false;
+    this.fetchData().then(response =>{
+      this.tweets = response.body;
+      this.loading =false;
+      this.getNumRows();
+      this.computeTweets();
+    }).catch(err => {
+      this.loading =false;
       console.log("err");
-    }
-  },
-  beforeMount() {
-    this.getNumRows();
-    this.computeTweets();
+    });
+    
   },
 
   methods: {
+    fetchData() {
+      return this.$http.get(
+        "http://localhost:7890/1.1/statuses/user_timeline.json?count=30&screen_name=makeschool"
+      );
+      // console.log(response.body);
+      // this.tweets = response.body;
+      // console.log(this.tweets);
+      // this.loading = false;
+      // if (!response) {
+      //   this.loading = false;
+      //   console.log("err");
+      // }
+    },
     editLayoutViewLg() {
       this.layoutIsOpened = !this.layoutIsOpened;
     },
@@ -64,8 +73,10 @@ export default {
         ? JSON.parse(localStorage.getItem("x-numCols"))
         : Math.ceil(30 / 3);
     },
-    computeTweets() {
+    computeTweets(index) {
+      console.log("hello")
       let startPos = index * this.numRows;
+      console.log(this.tweets);
       computedTweets = this.tweets.slice(startPos, startPos + this.numRows);
     }
   }
