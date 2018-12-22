@@ -84,10 +84,8 @@ export default {
       this.numRows = localStorage.getItem("x-numCols")
         ? JSON.parse(localStorage.getItem("x-numCols"))
         : Math.ceil(30 / 3);
-    }
-  },
-  computed: {
-    computedTweets: index => {
+    },
+    computeTweets() {
       let startPos = index * this.numRows;
       return this.tweets.slice(startPos, startPos + this.numRows);
     },

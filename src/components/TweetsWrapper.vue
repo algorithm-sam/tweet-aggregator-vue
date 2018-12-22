@@ -1,23 +1,30 @@
-<template v-sortable="{handle: '.column'}">
-  <div class="columns mag-top">
+<template >
+  <div>
     <b-loading v-if="loading" :is-full-page="false" :active.sync="loading"></b-loading>
-    <tweet-container
-      class="column"
-      v-for="(child,index) in children"
-      :key="index"
-      :tweet="tweets[index]"
-      :numInCol="settings.numTweets || 30"
-    ></tweet-container>
+    <div class="container">
+      <!-- <div class="columns mag-top"> -->
+        <draggable v-model="children" class="columns mag-top">
+          <tweet-container
+            class="column p-10 is-primary tweets"
+            v-for="(child,index) in children"
+            :key="index"
+            :tweet="tweets[index]"
+            :numInCol="settings.numTweets || 30"
+          />
+        </draggable>
+      <!-- </div> -->
+    </div>
   </div>
 </template>
 
 <script>
+import draggable from 'vuedraggable';
 import TweetContainer from "./TweetContainer";
 export default {
   name: "tweetCon",
   props: ["tweets", "loading", "settings"],
   components: {
-    TweetContainer
+    TweetContainer, draggable
   },
   data() {
     return {
@@ -33,4 +40,10 @@ export default {
 .mag-top {
   margin-top: 50px;
 }
+.p-10{
+  padding: 5px;
+  margin: 5px;
+  /*background-color: red*/
+}
+
 </style>
