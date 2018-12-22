@@ -73,19 +73,19 @@ export default {
   },
   data() {
     return {
-      numTweet: 3,
+      numTweet: 30,
       weekAgo: 1,
       activeSkin: "",
       pageSkins: [
         {
           name: "Light",
           class: "transparent",
-          active: false
+          active: true
         },
         {
           name: "Default",
           class: "primary",
-          active: true
+          active: false
         },
         {
           name: "Green",

@@ -3,14 +3,13 @@
     <input
       class="is-checkradio has-background-color"
       :class="getColor"
-      :id="'exampleCheckBoxBackgroundColor'+color"
-      :name="'exampleCheckBoxBackgroundColor'+color"
-      type="checkbox"
+      :id="'exampleRadioBackgroundColor'+color"
+      name="exampleRadioBackgroundColor"
+      type="radio"
       :checked="checked? 'ckecked' : ''"
-      v-model="pageSkin"
-      @change="colorChange"
+      @click="colorChange"
     >
-    <label :for="'exampleCheckBoxBackgroundColor'+color">{{this.color}}</label>
+    <label :for="'exampleRadioBackgroundColor'+color">{{this.color}}</label>
   </div>
 </template>
 
@@ -44,9 +43,7 @@ export default {
   },
   methods: {
     colorChange() {
-      if (this.pageSkin) {
-        EventBus.$emit("skinChanged", this.getColor);
-      }
+      EventBus.$emit("skinChanged", this.getColor);
     }
   }
 };
