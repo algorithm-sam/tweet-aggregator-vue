@@ -1,16 +1,22 @@
 <template>
   <aside class="layoutOption animated" :class="{'slideInRight': overlay, 'slideOutRight':!overlay}">
     <h1>Layout Controls</h1>
-    <p class="menu-label">No of Tweets Per Row</p>
+    <p class="menu-label">No of Tweets Per Column</p>
     <section style="padding-left: 20px;">
       <div class="field">
-        <b-radio v-model="numCol" native-value="3">3</b-radio>
+        <b-radio v-model="numTweet" native-value="10">10</b-radio>
       </div>
       <div class="field">
-        <b-radio v-model="numCol" native-value="4">4</b-radio>
+        <b-radio v-model="numTweet" native-value="15">15</b-radio>
       </div>
       <div class="field">
-        <b-radio v-model="numCol" native-value="5">5</b-radio>
+        <b-radio v-model="numTweet" native-value="20">20</b-radio>
+      </div>
+      <div class="field">
+        <b-radio v-model="numTweet" native-value="25">25</b-radio>
+      </div>
+      <div class="field">
+        <b-radio v-model="numTweet" native-value="30">30</b-radio>
       </div>
     </section>
 
@@ -31,91 +37,82 @@
       <div class="field">
         <b-checkbox :value="true" type="is-warning">Warning</b-checkbox>
       </div>-->
-      <div class="field">
-        <input
-          class="is-checkradio has-background-color"
-          id="exampleCheckboxBackgroundColorDefault"
-          type="checkbox"
-          name="exampleCheckboxBackgroundColorDefault"
-          :checked="pageSkin === 1"
-          v-model="pageSkin"
-        >
-        <label for="exampleCheckboxBackgroundColorDefault">Default</label>
-      </div>
-
-      <div class="field">
-        <input
-          class="is-checkradio has-background-color is-success"
-          id="exampleCheckboxBackgroundColorSuccess"
-          type="checkbox"
-          name="exampleCheckboxBackgroundColorSuccess"
-          :checked="pageSkin === 2"
-          v-model="pageSkin"
-        >
-        <label for="exampleCheckboxBackgroundColorSuccess">Green</label>
-      </div>
-
-      <div class="field">
-        <input
-          class="is-checkradio has-background-color is-warning"
-          id="exampleCheckboxBackgroundColorWarning"
-          type="checkbox"
-          name="exampleCheckboxBackgroundColorWarning"
-          :checked="pageSkin === 3"
-          v-model="pageSkin"
-        >
-        <label for="exampleCheckboxBackgroundColorWarning">Orange</label>
-      </div>
-
-      <div class="field">
-        <input
-          class="is-checkradio has-background-color is-danger"
-          id="exampleCheckboxBackgroundColorDanger"
-          type="checkbox"
-          name="exampleCheckboxBackgroundColorDanger"
-          :checked="pageSkin === 4"
-          v-model="pageSkin"
-        >
-        <label for="exampleCheckboxBackgroundColorDanger">Red</label>
-      </div>
-
-      <div class="field">
-        <input
-          class="is-checkradio has-background-color is-info"
-          id="exampleCheckboxBackgroundColorInfo"
-          type="checkbox"
-          name="exampleCheckboxBackgroundColorInfo"
-          :checked="pageSkin === 5"
-          v-model="pageSkin"
-        >
-        <label for="exampleCheckboxBackgroundColorInfo">Blue</label>
-      </div>
+      <custom-checkbox
+        v-for="(layoutOption,index) in pageSkins"
+        :checked="layoutOption.active"
+        :key="index"
+        :value="index"
+        :color="layoutOption.name"
+      ></custom-checkbox>
     </section>
 
     <p class="menu-label">Show Tweets From</p>
     <div class="field">
       <input
         id="sliderWithValue"
-        class="slider has-output-tooltip"
-        min="0"
-        max="100"
-        value="50"
-        step="1"
+        class="slider has-output"
+        min="10"
+        max="300"
+        :value="tweets"
+        step="5"
         type="range"
       >
       <output for="sliderWithValue">2days ago</output>
+    </div>
+
+    <div class="field">
+      <div class="control">
+        <a class="button is-primary is-rounded">
+          <span class="icon">
+            <i class="fa fa-check"></i>
+          </span>
+          <span>Save Settings</span>
+        </a>
+      </div>
     </div>
   </aside>
 </template>
 
 <script>
+import CustomCheckbox from "./CustomCheckbox";
+import "bulma-slider/dist/css/bulma-slider.min.css";
 export default {
   name: "EditLayout",
-  props: ["overlay", "width"],
+  props: ["overlay", "settings"],
+  components: {
+    CustomCheckbox
+  },
   data() {
     return {
-      numCol: 3,
-      pageSkin: 1
+      numTweet: 3,
+      activeSkin: "",
+      pageSkins: [
+        {
+          color: "#fff",
+          name: "Default",
+          active: false
+        },
+        {
+          color: "#fff",
+          name: "Green",
+          active: true
+        },
+        {
+          color: "#fff",
+          name: "Orange",
+          active: false
+        },
+        {
+          color: "#fff",
+          name: "Red",
+          active: false
+        },
+        {
+          color: "#fff",
+          name: "Blue",
+          active: false
+        }
+      ]
     };
   }
 };
