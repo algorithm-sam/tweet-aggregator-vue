@@ -1,6 +1,6 @@
 <template>
-  <div class="column">
-    <div class="card">
+  <!-- <div class="column"> -->
+    <div class="card mb-10">
       <div class="card-content">
         <div class="media">
           <div class="media-left">
@@ -25,46 +25,54 @@
             >{{mention.name}}</b-tag>
           </p>
           <br>
-          <time datetime="2016-1-1">{{this.tweet.created_at}}</time>
-        </div>
-        <div class="is-clearfix">
+          <time datetime="2016-1-1">{{this.tweet.created_at | moment}}</time>
           <a
-            class="button is-primary is-rounded is-pulled-right"
+            class="button is-small is-primary is-rounded is-pulled-right"
             :href="tweet.entities.urls[0].url"
             target="_blank"
-          >Read on Twitter</a>
+          ><span>Read on Twitter</span></a>
         </div>
       </div>
     </div>
-  </div>
+  <!-- </div> -->
 </template>
 
 <script>
-export default {
-  name: "tweet",
-  props: ["tweet"],
-  data() {
-    return {
-      msg: "Welcome to Your Vue.js App"
-    };
-  },
-  computed: {
-    formattedDate() {
-      return Date.today();
+  import Moment from 'moment'
+
+  export default {
+    name: "tweet",
+    props: ["tweet"],
+    data() {
+      return {
+        msg: "Welcome to Your Vue.js App"
+      };
     },
-    userMentions() {
-      return this.tweet.entities.user_mentions;
+    computed: {
+      formattedDate() {
+        return Date.today();
+      },
+      userMentions() {
+        return this.tweet.entities.user_mentions;
+      }
+    },
+    filters: {
+      moment(date) {
+        return Moment(date).fromNow();;
+      }
     }
-  }
-};
+  };
 </script>
 
 <style scoped>
 .card .content {
-  height: 100px;
-  max-height: 100px;
+  /*height: 100px;
+  max-height: 100px;*/
 }
 .mentions {
   margin-right: 5px;
+}
+.mb-10 {
+  margin-bottom: 10px;
 }
 </style>
