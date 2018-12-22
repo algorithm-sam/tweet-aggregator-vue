@@ -3,7 +3,7 @@
     <b-loading v-if="loading" :is-full-page="false" :active.sync="loading"></b-loading>
     <div class="container">
       <!-- <div class="columns mag-top"> -->
-        <draggable v-model="children" :options="{draggable:'.tweets'}" class="columns mag-top">
+        <draggable v-model="children" class="columns mag-top">
           <tweet-container
             class="column p-10 is-primary tweets"
             v-for="(child,index) in children"
@@ -45,8 +45,5 @@ export default {
   margin: 5px;
   background-color: red
 }
-.tweets {
-  height: 100%;
-  overflow: auto;
-}
+
 </style>
