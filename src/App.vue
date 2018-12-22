@@ -1,63 +1,84 @@
 <template>
   <div id="app">
-    <Navbar @toggleLayoutViewLg="editLayoutViewLg()" @toggleLayoutViewMd="editLayoutViewMd()"/>
-    <container-wrapper
-      :loading="loading"
-      v-for="(rows,index) in numRows"
-      :key="index"
-      :tweets="computedTweets"
-    ></container-wrapper>
-    <edit-layout :overlay="overlayed" :width="layoutWidth"></edit-layout>
+    <Navbar
+      @toggleLayoutViewLg="editLayoutViewLg()"
+      @toggleLayoutViewMd="editLayoutViewMd()"
+      :color="getLayoutSettings.skinColor"
+    />
+    <tweets-wrapper :loading="loading" :tweets="tweets" :settings="getLayoutSettings"></tweets-wrapper>
+    <edit-layout :overlay="overlayed" :width="layoutWidth" :settings="getLayoutSettings"></edit-layout>
   </div>
 </template>
 
 <script>
 import Navbar from "./components/Navbar";
-import ContainerWrapper from "./components/ContainerWrapper";
+import TweetsWrapper from "./components/TweetsWrapper";
 import EditLayout from "./components/EditLayout";
 // import { EventBus } from "./eventBus.js";
+import axios from "axios";
 export default {
   name: "App",
   components: {
     Navbar,
-    ContainerWrapper,
+    TweetsWrapper,
     EditLayout
   },
   data() {
     return {
       layoutWidth: 0,
-      layoutIsOpened: false,
       overlayed: false,
       loading: true,
       tweets: [],
-      numRows: 0,
-      computedTweets: []
+      numRows: 0
     };
   },
   async created() {
     this.loading = true;
-    let response = await this.$http.get(
-      "http://localhost:7890/1.1/statuses/user_timeline.json?count=30&screen_name=makeschool"
-    );
-    console.log(response.body);
-    this.tweets = response.body;
-    this.loading = false;
-    if (!response) {
-      this.loading = false;
-      console.log("err");
-    }
+    axios
+      .all([
+        this.getTweets("makeschool"),
+        this.getTweets("newsycombinator"),
+        this.getTweets("ycombinator")
+      ])
+      .then(
+        axios.spread((makeschool, newsycombinator, ycombinator) => {
+          this.tweets.push(
+            makeschool.data,
+            newsycombinator.data,
+            ycombinator.data
+          );
+          this.loading = false;
+        })
+      )
+      .catch(err => {
+        this.loading = false;
+        console.log(err);
+      });
+
+    // // let response = await this.$http.get(
+    // //   "http://localhost:7890/1.1/statuses/user_timeline.json?count=30&screen_name=makeschool"
+    // // );
+    // // console.log(response.body);
+    // // this.tweets = response.body;
+    // if (!response.ok) {
+    // }
   },
   beforeMount() {
     this.getNumRows();
-    this.computeTweets();
   },
 
   methods: {
+    getTweets(screen_name) {
+      return axios.get(
+        "http://localhost:7890/1.1/statuses/user_timeline.json?count=30&screen_name=" +
+          screen_name
+      );
+    },
     editLayoutViewLg() {
-      this.layoutIsOpened = !this.layoutIsOpened;
+      this.overlayed = !this.overlayed;
     },
     editLayoutViewMd() {
-      alert("Small Screen");
+      this.overlayed = !this.overlayed;
     },
     getNumRows() {
       this.numRows = localStorage.getItem("x-numCols")
@@ -66,7 +87,19 @@ export default {
     },
     computeTweets() {
       let startPos = index * this.numRows;
-      computedTweets = this.tweets.slice(startPos, startPos + this.numRows);
+      return this.tweets.slice(startPos, startPos + this.numRows);
+    },
+
+    getLayoutSettings() {
+      let setUp = localStorage.getItem("x-setup")
+        ? JSON.parse(localStorage.getItem("x-setup"))
+        : {};
+      return {
+        skinColor: setUp.color ? setUp.color : null,
+        numTweets: setUp.numTweets ? setUp.numTweets : null,
+        timeRange: setUp.timeRange ? setUp.timeRange : null,
+        columnOrder: setUp.columnOrder ? setUp.columnOrder : null
+      };
     }
   }
 };

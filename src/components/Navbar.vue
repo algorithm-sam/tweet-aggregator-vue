@@ -31,11 +31,10 @@
 <script>
 import { EventBus } from "../eventBus.js";
 export default {
-  name: "HelloWorld",
+  name: "SiteNavigation",
+  props: ["color"],
   data() {
-    return {
-      msg: "Welcome to Your Vue.js App"
-    };
+    return {};
   },
   methods: {
     toggleEditLayoutLarge() {
