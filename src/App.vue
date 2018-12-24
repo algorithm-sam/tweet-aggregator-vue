@@ -6,7 +6,7 @@
       :color="getLayoutSettings.skinColor"
     />
     <tweets-wrapper :loading="loading" :tweets="tweets" :settings="getLayoutSettings"></tweets-wrapper>
-    <edit-layout :overlay="overlayed" :width="layoutWidth" :settings="getLayoutSettings"></edit-layout>
+    <edit-layout :overlay="overlayed" :width="layoutWidth" :settings="getLayoutSettings" @numTweetsChanged="changeTweetsNum"></edit-layout>
   </div>
 </template>
 
@@ -84,6 +84,16 @@ export default {
     },
     changeSkin(skin) {
       this.activeSkin = skin;
+      let setUp = localStorage.getItem("x-setup") ? JSON.parse(localStorage.getItem("x-setup")): {};
+      setUp.color = skin;
+      localStorage.setItem("x-setup", JSON.stringify(setUp))
+    },
+    changeTweetsNum(num) {
+      alert('hjk');
+      this.numTweets = num;
+      let setUp = localStorage.getItem("x-setup") ? JSON.parse(localStorage.getItem("x-setup")): {};
+      setUp.numTweets = num;
+      localStorage.setItem("x-setup", JSON.stringify(setUp))
     }
   },
   computed: {
@@ -93,7 +103,7 @@ export default {
         : {};
       return {
         skinColor: setUp.color ? setUp.color : this.activeSkin,
-        numTweets: setUp.numTweets ? setUp.numTweets : null,
+        numTweets: setUp.numTweets ? setUp.numTweets : 30,
         timeRange: setUp.timeRange ? setUp.timeRange : null,
         columnOrder: setUp.columnOrder ? setUp.columnOrder : null
       };

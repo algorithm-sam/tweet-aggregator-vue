@@ -1,6 +1,6 @@
 <template>
   <div class="scrollable">
-    <Tweet v-for="(child,index) in tweet" :key="index" :tweet="child" :skin="settings.skinColor"></Tweet>
+    <Tweet v-for="(child,index) in scaledTweets" :key="index" :tweet="child" :skin="settings.skinColor"></Tweet>
   </div>
 </template>
 
@@ -9,16 +9,21 @@ import Tweet from "./Tweet";
 
 export default {
   name: "container",
-  props: ["tweet", "numInCol", "settings"],
+  props: ["tweets", "numInCol", "settings"],
   components: {
     Tweet
   },
   data() {
     return {
-      numRows: 4
+      numTweets: this.settings.numTweets,
+      // scaledTweets: this.tweets.splice[0, this.numTweets]
     };
   },
-  created() {}
+  computed: {
+    scaledTweets() {
+      return this.tweets.slice(-(this.tweets.length), this.settings.numTweets);
+    }
+  }
 };
 </script>
 
