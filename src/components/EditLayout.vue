@@ -4,19 +4,19 @@
     <p class="menu-label">No of Tweets Per Column</p>
     <section style="padding-left: 20px;">
       <div class="field">
-        <b-radio v-model="numTweet" native-value="10">10</b-radio>
+        <b-radio v-model="numTweets" native-value="10" @changed="numTweetsChanged">10</b-radio>
       </div>
       <div class="field">
-        <b-radio v-model="numTweet" native-value="15">15</b-radio>
+        <b-radio v-model="numTweets" native-value="15" @changed="numTweetsChanged">15</b-radio>
       </div>
       <div class="field">
-        <b-radio v-model="numTweet" native-value="20">20</b-radio>
+        <b-radio v-model="numTweets" native-value="20" @changed="numTweetsChanged">20</b-radio>
       </div>
       <div class="field">
-        <b-radio v-model="numTweet" native-value="25">25</b-radio>
+        <b-radio v-model="numTweets" native-value="25" @changed="numTweetsChanged">25</b-radio>
       </div>
       <div class="field">
-        <b-radio v-model="numTweet" native-value="30">30</b-radio>
+        <b-radio v-model="numTweets" native-value="30" @changed="numTweetsChanged">30</b-radio>
       </div>
     </section>
 
@@ -73,7 +73,7 @@ export default {
   },
   data() {
     return {
-      numTweet: 30,
+      numTweets: this.settings.numTweets,
       weekAgo: 1,
       activeSkin: "",
       pageSkins: [
@@ -117,9 +117,11 @@ export default {
     },
 
     numTweetsChanged() {
-      EventBus.emit("numTweetsChanged", this.numTweet);
+      alert("this.numTweets")
+      // this.$emit("numTweetssChanged", this.numTweets);
     },
     changeSkin(skin) {
+      alert(this.numTweets)
       this.activeSkin = skin;
     }
   },

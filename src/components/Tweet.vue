@@ -29,7 +29,7 @@
         <a
           class="button is-small is-rounded is-pulled-right"
           :class="skin"
-          :href="tweet.entities.urls[0].url"
+          :href="tweet.entities.urls[0]? tweet.entities.urls[0].url: null"
           target="_blank"
         >
           <span>Read on Twitter</span>
@@ -52,9 +52,6 @@ export default {
     };
   },
   computed: {
-    formattedDate() {
-      return Date.today();
-    },
     userMentions() {
       return this.tweet.entities.user_mentions;
     }

@@ -9,7 +9,7 @@
           :class="settings.skinColor"
           v-for="(child,index) in tweetsData"
           :key="index"
-          :tweet="tweetsData[index]"
+          :tweets="tweetsData[index]"
           :numInCol="settings.numTweets || 30"
           :settings="settings"
         />
